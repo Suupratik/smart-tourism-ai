@@ -1,0 +1,161 @@
+/* =========================
+   GLOBAL RESET
+========================= */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  font-family: "Inter", "Segoe UI", Roboto, Arial, sans-serif;
+  background: #f5f7fb;
+  color: #333;
+  min-height: 100vh;
+  scroll-behavior: smooth;
+}
+
+/* =========================
+   LINKS
+========================= */
+
+a {
+  text-decoration: none;
+  color: #1976d2;
+  font-weight: 500;
+  transition: 0.2s;
+}
+
+a:hover {
+  color: #0d47a1;
+}
+
+/* =========================
+   IMAGES
+========================= */
+
+img {
+  max-width: 100%;
+  display: block;
+  border-radius: 10px;
+}
+
+/* =========================
+   BUTTON POLISH
+========================= */
+
+button {
+  transition: all 0.2s ease;
+}
+
+button:hover {
+  transform: translateY(-1px);
+}
+
+/* =========================
+   CARD / PAPER EFFECT
+========================= */
+
+.MuiPaper-root {
+  transition: all 0.25s ease;
+}
+
+.MuiPaper-root:hover {
+  transform: translateY(-4px);
+}
+
+/* =========================
+   HEADINGS
+========================= */
+
+h1, h2, h3, h4, h5 {
+  font-weight: 600;
+  letter-spacing: 0.3px;
+}
+
+/* =========================
+   MAP POLISH
+========================= */
+
+.leaflet-container {
+  border-radius: 12px;
+}
+
+/* =========================
+   CHATBOT FLOAT EFFECT
+========================= */
+
+.chatbot-container {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 1000;
+}
+
+/* =========================
+   SCROLLBAR
+========================= */
+
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #eef1f5;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #b0bec5;
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #90a4ae;
+}
+
+/* =========================
+   PAGE ANIMATION
+========================= */
+
+body {
+  animation: fadeIn 0.5s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* =========================
+   PLACE IMAGE EFFECT
+========================= */
+
+.place-image {
+  overflow: hidden;
+  border-radius: 12px;
+}
+
+.place-image img {
+  transition: transform 0.3s ease;
+}
+
+.place-image:hover img {
+  transform: scale(1.05);
+}
+
+/* =========================
+   FOOTER SPACE
+========================= */
+
+body::after {
+  content: "";
+  display: block;
+  height: 40px;
+}

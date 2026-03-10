@@ -1,0 +1,53 @@
+# ======================
+# Node Modules
+# ======================
+node_modules/
+
+# ======================
+# Environment Variables
+# ======================
+.env
+.env.local
+.env.development
+.env.production
+
+# ======================
+# Build Files
+# ======================
+dist/
+build/
+
+# ======================
+# Logs
+# ======================
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# ======================
+# OS Files
+# ======================
+.DS_Store
+Thumbs.db
+
+# ======================
+# IDE Files
+# ======================
+.vscode/
+.idea/
+
+# ======================
+# Uploads (optional)
+# ======================
+backend/uploads/
+
+# ======================
+# Temporary Files
+# ======================
+*.tmp
+*.temp
+
+# ======================
+# Editor Generated Files
+# ======================
+babel.json
