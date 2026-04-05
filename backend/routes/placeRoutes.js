@@ -33,4 +33,7 @@ router.get("/", placeController.getPlaces);
 router.get("/:id", placeController.getSinglePlace);
 router.delete("/:id", placeController.deletePlace);
 
+// ✅ NEW UPDATE ROUTE
+router.put("/:id", upload.single("image"), placeController.updatePlace);
+
 module.exports = router;

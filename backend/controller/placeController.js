@@ -52,3 +52,34 @@ exports.deletePlace = async (req, res) => {
   res.json({ message: "Place deleted" });
 };
 
+// update place
+exports.updatePlace = async (req, res) => {
+  try {
+    const { name, location, ticketPrice, description } = req.body;
+
+    const place = await Place.findById(req.params.id);
+
+    if (!place) {
+      return res.status(404).json({ message: "Place not found" });
+    }
+
+    // if new image uploaded → delete old one
+    if (req.file) {
+      removeFile(place.image);
+      place.image = `/uploads/places/${req.file.filename}`;
+    }
+
+    place.name = name || place.name;
+    place.location = location || place.location;
+    place.ticketPrice = ticketPrice || place.ticketPrice;
+    place.description = description || place.description;
+
+    await place.save();
+
+    res.json({ message: "Place updated", place });
+
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Update failed" });
+  }
+};

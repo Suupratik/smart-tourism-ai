@@ -7,6 +7,7 @@ import Chatbot from "../components/Chatbot";
 
 const Home = () => {
   const [places, setPlaces] = useState([]);
+  const [search, setSearch] = useState(""); // ✅ NEW
 
   const fetchPlaces = async () => {
     try {
@@ -21,9 +22,13 @@ const Home = () => {
     fetchPlaces();
   }, []);
 
+  // ✅ FILTER LOGIC
+  const filteredPlaces = places.filter((p) =>
+    p.name.toLowerCase().includes(search.toLowerCase())
+  );
+
   const deletePlace = async (id) => {
     try {
-
       if (!window.confirm("Delete this place?")) return;
 
       await api.delete(`/places/${id}`);
@@ -31,7 +36,6 @@ const Home = () => {
       alert("Place deleted");
 
       fetchPlaces();
-
     } catch (err) {
       console.log(err);
     }
@@ -46,8 +50,23 @@ const Home = () => {
         🌍 Tourist Places
       </Typography>
 
+      {/* ✅ SEARCH BAR */}
+      <input
+        type="text"
+        placeholder="Search places..."
+        value={search}
+        onChange={(e) => setSearch(e.target.value)}
+        style={{
+          width: "100%",
+          padding: "10px",
+          marginBottom: "20px",
+          borderRadius: "8px",
+          border: "1px solid #ccc"
+        }}
+      />
+
       <Grid container spacing={3}>
-        {places.map((p) => (
+        {filteredPlaces.map((p) => ( // ✅ UPDATED
           <Grid item xs={12} md={4} key={p._id}>
             <Paper
               sx={{

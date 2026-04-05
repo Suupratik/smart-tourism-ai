@@ -20,9 +20,14 @@ const Login = () => {
     try {
       const res = await loginUser(form);
 
+      // ✅ STORE TOKEN
       localStorage.setItem("token", res.data.token);
 
+      // ✅ STORE USER + ADMIN FLAG
+      localStorage.setItem("user", JSON.stringify(res.data.user));
+
       nav("/home");
+
     } catch (err) {
       alert("Login failed");
     }

@@ -1,10 +1,12 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { TextField, Button, Paper, Typography, Stack } from "@mui/material";
 import { createPlace } from "../api/api";
-import { useNavigate } from "react-router-dom";
+import api from "../api/api";
+import { useNavigate, useParams } from "react-router-dom";
 
 const AddPlace = () => {
   const nav = useNavigate();
+  const { id } = useParams(); // ✅ detect edit mode
 
   const [form, setForm] = useState({
     name: "",
@@ -18,6 +20,20 @@ const AddPlace = () => {
   const onChange = (e) =>
     setForm({ ...form, [e.target.name]: e.target.value });
 
+  // ✅ FETCH PLACE FOR EDIT
+  useEffect(() => {
+    if (id) {
+      api.get(`/places/${id}`).then((res) => {
+        setForm({
+          name: res.data.name || "",
+          location: res.data.location || "",
+          ticketPrice: res.data.ticketPrice || "",
+          description: res.data.description || ""
+        });
+      });
+    }
+  }, [id]);
+
   const onSubmit = async (e) => {
     e.preventDefault();
 
@@ -30,21 +46,28 @@ const AddPlace = () => {
       fd.append("description", form.description);
 
       if (image) fd.append("image", image);
-      console.log(fd);
-      await createPlace(fd);
 
-      alert("Place added successfully");
+      if (id) {
+        // ✅ UPDATE
+        await api.put(`/places/${id}`, fd);
+        alert("Place updated successfully");
+      } else {
+        // ✅ CREATE
+        await createPlace(fd);
+        alert("Place added successfully");
+      }
 
       nav("/home");
+
     } catch (err) {
-      alert("Error creating place");
+      alert("Error saving place");
     }
   };
 
   return (
     <Paper sx={{ p: 3 }}>
       <Typography variant="h5" sx={{ mb: 2 }}>
-        Add Tourist Place
+        {id ? "Edit Tourist Place" : "Add Tourist Place"}
       </Typography>
 
       <form onSubmit={onSubmit}>
@@ -52,6 +75,7 @@ const AddPlace = () => {
           <TextField
             label="Place Name"
             name="name"
+            value={form.name}
             onChange={onChange}
             required
           />
@@ -59,6 +83,7 @@ const AddPlace = () => {
           <TextField
             label="Location"
             name="location"
+            value={form.location}
             onChange={onChange}
             required
           />
@@ -67,6 +92,7 @@ const AddPlace = () => {
             label="Ticket Price"
             name="ticketPrice"
             type="number"
+            value={form.ticketPrice}
             onChange={onChange}
           />
 
@@ -75,6 +101,7 @@ const AddPlace = () => {
             name="description"
             multiline
             rows={4}
+            value={form.description}
             onChange={onChange}
             required
           />
@@ -90,7 +117,7 @@ const AddPlace = () => {
           </Button>
 
           <Button type="submit" variant="contained">
-            Add Place
+            {id ? "Update Place" : "Add Place"}
           </Button>
         </Stack>
       </form>

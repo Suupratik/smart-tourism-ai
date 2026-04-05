@@ -6,8 +6,13 @@ const Appnavbar = () => {
   const navigate = useNavigate();
   const token = localStorage.getItem("token");
 
+  // ✅ GET USER + ADMIN
+  const user = JSON.parse(localStorage.getItem("user"));
+  const isAdmin = user?.isAdmin;
+
   const logout = () => {
     localStorage.removeItem("token");
+    localStorage.removeItem("user");
     navigate("/login");
   };
 
@@ -30,23 +35,31 @@ const Appnavbar = () => {
               </Button>
             </>
           ) : (
-           <>
-  <Button component={Link} to="/home" color="inherit">
-    Places
-  </Button>
+            <>
+              <Button component={Link} to="/home" color="inherit">
+                Places
+              </Button>
 
-  <Button component={Link} to="/add" color="inherit">
-    Add Place
-  </Button>
+              {/* ✅ ADMIN ONLY */}
+              {isAdmin && (
+                <Button component={Link} to="/add" color="inherit">
+                  Add Place
+                </Button>
+              )}
 
-  <Button component={Link} to="/my-tickets" color="inherit">
-    My Tickets
-  </Button>
+              <Button component={Link} to="/my-tickets" color="inherit">
+                My Tickets
+              </Button>
 
-  <Button color="inherit" onClick={logout}>
-    Logout
-  </Button>
-</>
+              {/* ✅ ADD THIS */}
+              <Button component={Link} to="/chat-live" color="inherit">
+                Live Chat
+              </Button>
+
+              <Button color="inherit" onClick={logout}>
+                Logout
+              </Button>
+            </>
           )}
         </Box>
       </Toolbar>
