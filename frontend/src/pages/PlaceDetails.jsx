@@ -144,7 +144,7 @@ const PlaceDetails = () => {
         {/* IMAGE */}
         {place.image && (
           <motion.img
-            src={`http://localhost:5600${place.image}`}
+            src={`https://your-render-url.onrender.com${p.image}`}
             alt="place"
             initial={{ scale: 0.9 }}
             animate={{ scale: 1 }}
