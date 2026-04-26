@@ -19,18 +19,34 @@ const app = express();
 // ✅ create HTTP server
 const server = http.createServer(app);
 
-// ✅ CORS (important for deployment)
+// ✅ CENTRALIZED ALLOWED ORIGINS
+const allowedOrigins = [
+  "http://localhost:5173",
+  "https://smart-tourism-fqr7aa97s-supratik-mitras-projects.vercel.app"
+];
+
+// ✅ CORS FIX (NO "*")
 app.use(cors({
-  origin: "*", // later replace with Vercel URL
+  origin: function (origin, callback) {
+    // allow requests with no origin (mobile apps, postman)
+    if (!origin) return callback(null, true);
+
+    if (allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
   methods: ["GET", "POST", "PUT", "DELETE"],
   credentials: true
 }));
 
-// ✅ socket setup
+// ✅ SOCKET.IO FIX (MATCH SAME ORIGINS)
 const io = new Server(server, {
   cors: {
-    origin: "*",
-    methods: ["GET", "POST"]
+    origin: allowedOrigins,
+    methods: ["GET", "POST"],
+    credentials: true
   }
 });
 
@@ -64,7 +80,7 @@ app.get("/", (req, res) => {
   res.send("Smart Tourism API working");
 });
 
-// ✅ connect DB THEN start server
+// start server AFTER DB
 const PORT = process.env.PORT || 5600;
 
 connectdb()
@@ -76,21 +92,3 @@ connectdb()
   .catch((err) => {
     console.error("DB connection failed:", err);
   });
-// // Make admin user (run once)
-// const User = require("./models/User");
-
-// const makeAdmin = async () => {
-//   const email = "supratikmitra15@gmail.com"; // 👈 put your email
-
-//   const user = await User.findOne({ email });
-
-//   if (user) {
-//     user.isAdmin = true;
-//     await user.save();
-//     console.log("You are now admin ✅");
-//   } else {
-//     console.log("User not found ❌");
-//   }
-// };
-
-// makeAdmin();,

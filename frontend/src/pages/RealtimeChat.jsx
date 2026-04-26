@@ -2,38 +2,70 @@ import React, { useEffect, useState } from "react";
 import { io } from "socket.io-client";
 import { TextField, Button, Paper, Typography } from "@mui/material";
 
-const socket = io("http://localhost:5600");
+// ✅ use same backend URL everywhere
+const socket = io("https://smart-tourism-ai.onrender.com", {
+  transports: ["websocket"], // more stable in production
+  withCredentials: true
+});
 
 const RealtimeChat = () => {
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState([]);
+  const [connected, setConnected] = useState(false);
 
- useEffect(() => {
-  const handleMessage = (data) => {
-    setMessages((prev) => [...prev, data]);
-  };
+  // optional: identify user
+  const user = JSON.parse(localStorage.getItem("user"));
+  const username = user?.name || "Guest";
 
-  socket.on("receive_message", handleMessage);
+  useEffect(() => {
+    // ✅ connection status
+    socket.on("connect", () => {
+      console.log("Connected:", socket.id);
+      setConnected(true);
+    });
 
-  return () => {
-    socket.off("receive_message", handleMessage); // ✅ cleanup
-  };
-}, []);
+    socket.on("disconnect", () => {
+      setConnected(false);
+    });
+
+    // ✅ receive messages
+    const handleMessage = (data) => {
+      setMessages((prev) => [...prev, data]);
+    };
+
+    socket.on("receive_message", handleMessage);
+
+    return () => {
+      socket.off("receive_message", handleMessage);
+      socket.off("connect");
+      socket.off("disconnect");
+    };
+  }, []);
 
   const sendMessage = () => {
     if (message.trim() === "") return;
 
-    socket.emit("send_message", message);
+    const msgData = {
+      user: username,
+      text: message
+    };
+
+    socket.emit("send_message", msgData);
+
     setMessage("");
   };
 
   return (
     <Paper sx={{ p: 3 }}>
-      <Typography variant="h5">Real-Time Chat</Typography>
+      <Typography variant="h5">
+        Real-Time Chat {connected ? "🟢" : "🔴"}
+      </Typography>
 
-      <div style={{ marginTop: 20 }}>
+      <div style={{ marginTop: 20, maxHeight: 300, overflowY: "auto" }}>
         {messages.map((msg, i) => (
-          <Typography key={i}>{msg}</Typography>
+          <Typography key={i}>
+            <strong>{msg.user}:</strong> {msg.text}
+          </Typography>
         ))}
       </div>
 

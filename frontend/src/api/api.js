@@ -1,12 +1,13 @@
 import axios from "axios";
 
-const BASE_URL = "https://your-render-url.onrender.com";
+// ❗ NO trailing slash
+const BASE_URL = "https://smart-tourism-ai.onrender.com";
 
 const api = axios.create({
   baseURL: `${BASE_URL}/api`
 });
 
-// 🔐 ALWAYS ATTACH TOKEN (MOVE HERE BEFORE EXPORT)
+// 🔐 attach token
 api.interceptors.request.use((config) => {
   const token = localStorage.getItem("token");
 
