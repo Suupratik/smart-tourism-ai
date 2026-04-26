@@ -1,13 +1,21 @@
 import React, { useEffect, useState } from "react";
-import { Typography, Grid, Paper, Button, Container } from "@mui/material";
+import {
+  Typography,
+  Grid,
+  Paper,
+  Button,
+  Container,
+  TextField
+} from "@mui/material";
 import { getPlaces } from "../api/api";
 import api from "../api/api";
 import { Link } from "react-router-dom";
 import Chatbot from "../components/Chatbot";
+import { motion } from "framer-motion";
 
 const Home = () => {
   const [places, setPlaces] = useState([]);
-  const [search, setSearch] = useState(""); // ✅ NEW
+  const [search, setSearch] = useState("");
 
   const fetchPlaces = async () => {
     try {
@@ -22,7 +30,6 @@ const Home = () => {
     fetchPlaces();
   }, []);
 
-  // ✅ FILTER LOGIC
   const filteredPlaces = places.filter((p) =>
     p.name.toLowerCase().includes(search.toLowerCase())
   );
@@ -32,9 +39,7 @@ const Home = () => {
       if (!window.confirm("Delete this place?")) return;
 
       await api.delete(`/places/${id}`);
-
       alert("Place deleted");
-
       fetchPlaces();
     } catch (err) {
       console.log(err);
@@ -43,82 +48,110 @@ const Home = () => {
 
   return (
     <Container maxWidth="lg" sx={{ mt: 4 }}>
-      <Typography
-        variant="h4"
-        sx={{ mb: 4, fontWeight: "bold", textAlign: "center" }}
+      
+      {/* 🔥 TITLE */}
+      <motion.div
+        initial={{ opacity: 0, y: -30 }}
+        animate={{ opacity: 1, y: 0 }}
       >
-        🌍 Tourist Places
-      </Typography>
+        <Typography
+          variant="h3"
+          sx={{
+            mb: 4,
+            fontWeight: "bold",
+            textAlign: "center",
+            letterSpacing: "1px"
+          }}
+        >
+          Smart Tourism Explorer
+        </Typography>
+      </motion.div>
 
-      {/* ✅ SEARCH BAR */}
-      <input
-        type="text"
+      {/* 🔍 SEARCH BAR (UPGRADED) */}
+      <TextField
+        fullWidth
+        variant="outlined"
         placeholder="Search places..."
         value={search}
         onChange={(e) => setSearch(e.target.value)}
-        style={{
-          width: "100%",
-          padding: "10px",
-          marginBottom: "20px",
-          borderRadius: "8px",
-          border: "1px solid #ccc"
+        sx={{
+          mb: 4,
+          background: "rgba(255,255,255,0.1)",
+          borderRadius: "12px",
+          input: { color: "white" }
         }}
       />
 
       <Grid container spacing={3}>
-        {filteredPlaces.map((p) => ( // ✅ UPDATED
+        {filteredPlaces.map((p, index) => (
           <Grid item xs={12} md={4} key={p._id}>
-            <Paper
-              sx={{
-                p: 2,
-                borderRadius: 3,
-                overflow: "hidden",
-                transition: "0.3s",
-                "&:hover": {
-                  transform: "translateY(-5px)",
-                  boxShadow: 4
-                }
-              }}
+            
+            <motion.div
+              initial={{ opacity: 0, y: 40 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: index * 0.1 }}
+              whileHover={{ scale: 1.04 }}
             >
-              {p.image && (
-                <img
-                  src={`http://localhost:5600${p.image}`}
-                  alt={p.name}
-                  style={{
-                    width: "100%",
-                    height: "180px",
-                    objectFit: "cover",
-                    borderRadius: "10px",
-                    marginBottom: "10px"
-                  }}
-                />
-              )}
-
-              <Typography variant="h6">{p.name}</Typography>
-
-              <Typography sx={{ mb: 2, color: "gray" }}>
-                {p.location}
-              </Typography>
-
-              <Button
-                component={Link}
-                to={`/place/${p._id}`}
-                size="small"
-                variant="outlined"
-                sx={{ mr: 1 }}
+              <Paper
+                sx={{
+                  p: 2,
+                  borderRadius: 4,
+                  background: "rgba(255,255,255,0.08)",
+                  backdropFilter: "blur(10px)",
+                  border: "1px solid rgba(255,255,255,0.1)",
+                  transition: "0.3s",
+                  "&:hover": {
+                    boxShadow: "0 20px 40px rgba(0,0,0,0.4)"
+                  }
+                }}
               >
-                View Details
-              </Button>
+                {p.image && (
+                  <img
+                    src={`http://localhost:5600${p.image}`}
+                    alt={p.name}
+                    style={{
+                      width: "100%",
+                      height: "180px",
+                      objectFit: "cover",
+                      borderRadius: "12px",
+                      marginBottom: "10px"
+                    }}
+                  />
+                )}
 
-              <Button
-                size="small"
-                color="error"
-                variant="contained"
-                onClick={() => deletePlace(p._id)}
-              >
-                Delete
-              </Button>
-            </Paper>
+                <Typography variant="h6" sx={{ fontWeight: "bold" }}>
+                  {p.name}
+                </Typography>
+
+                <Typography sx={{ mb: 2, color: "#ccc" }}>
+                  {p.location}
+                </Typography>
+
+                <motion.div whileTap={{ scale: 0.9 }}>
+                  <Button
+                    component={Link}
+                    to={`/place/${p._id}`}
+                    size="small"
+                    variant="outlined"
+                    sx={{ mr: 1 }}
+                  >
+                    View
+                  </Button>
+                </motion.div>
+
+                <motion.div whileTap={{ scale: 0.9 }}>
+                  <Button
+                    size="small"
+                    color="error"
+                    variant="contained"
+                    onClick={() => deletePlace(p._id)}
+                  >
+                    Delete
+                  </Button>
+                </motion.div>
+              </Paper>
+            </motion.div>
+
           </Grid>
         ))}
       </Grid>

@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { Typography, Paper, Button } from "@mui/material";
+import { Typography, Paper, Button, Stack } from "@mui/material";
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import { getPlaceById } from "../api/api";
 import api from "../api/api";
+import { motion } from "framer-motion";
 
 const PlaceDetails = () => {
   const { id } = useParams();
@@ -55,9 +56,9 @@ const PlaceDetails = () => {
               razorpay_signature: response.razorpay_signature
             });
 
-            alert("Payment Successful 🎉");
+            alert("Payment Successful");
           } catch (err) {
-            console.error("Verification error:", err);
+            console.error(err);
           }
         }
       };
@@ -92,7 +93,6 @@ const PlaceDetails = () => {
 
   const getAIRecommendation = async () => {
     try {
-
       const res = await api.post("/chat", {
         message: `Give travel recommendations for visiting ${place.name} in ${place.location}. Include best time to visit, nearby attractions, and travel tips.`
       });
@@ -114,97 +114,137 @@ const PlaceDetails = () => {
   ];
 
   return (
-    <Paper sx={{ p: 3 }}>
-      <Typography variant="h4">{place.name}</Typography>
-
-      <Typography sx={{ mt: 1 }}>
-        Location: {place.location}
-      </Typography>
-
-      <Typography sx={{ mt: 1 }}>
-        Ticket Price: ₹{place.ticketPrice}
-      </Typography>
-
-      <Typography sx={{ mt: 2 }}>
-        {place.description}
-      </Typography>
-
-      {place.image && (
-        <img
-          src={`http://localhost:5600${place.image}`}
-          alt="place"
-          width="100%"
-          style={{ marginTop: "20px", borderRadius: "10px" }}
-        />
-      )}
-
-      <MapContainer
-        center={position}
-        zoom={13}
-        style={{ height: "300px", marginTop: "20px", borderRadius: "10px" }}
+    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+      <Paper
+        sx={{
+          p: 3,
+          borderRadius: 4,
+          background: "rgba(255,255,255,0.08)",
+          backdropFilter: "blur(12px)",
+          border: "1px solid rgba(255,255,255,0.1)"
+        }}
       >
-        <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
-
-        <Marker position={position}>
-          <Popup>{place.name}</Popup>
-        </Marker>
-      </MapContainer>
-
-      <Button
-        variant="contained"
-        sx={{ mt: 3 }}
-        onClick={handlePayment}
-      >
-        Buy Ticket
-      </Button>
-
-      <Button
-        variant="outlined"
-        sx={{ mt: 3, ml: 2 }}
-        onClick={getAITips}
-      >
-        Get AI Travel Tips
-      </Button>
-
-      <Button
-        variant="contained"
-        sx={{ mt: 3, ml: 2 }}
-        onClick={getAIRecommendation}
-      >
-        AI Travel Recommendation
-      </Button>
-
-      {loadingAI && (
-        <Typography sx={{ mt: 2 }}>
-          AI is generating travel tips...
+        {/* TITLE */}
+        <Typography variant="h4" sx={{ fontWeight: "bold" }}>
+          {place.name}
         </Typography>
-      )}
 
-      {aiTips && (
-        <Paper sx={{ mt: 3, p: 2, backgroundColor: "#f5f5f5" }}>
-          <Typography variant="h6">
-            AI Travel Guide
+        <Typography sx={{ mt: 1, color: "#ccc" }}>
+          Location: {place.location}
+        </Typography>
+
+        <Typography sx={{ mt: 1 }}>
+          Ticket Price: ₹{place.ticketPrice}
+        </Typography>
+
+        <Typography sx={{ mt: 2 }}>
+          {place.description}
+        </Typography>
+
+        {/* IMAGE */}
+        {place.image && (
+          <motion.img
+            src={`http://localhost:5600${place.image}`}
+            alt="place"
+            initial={{ scale: 0.9 }}
+            animate={{ scale: 1 }}
+            style={{
+              width: "100%",
+              marginTop: "20px",
+              borderRadius: "12px"
+            }}
+          />
+        )}
+
+        {/* MAP */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+        >
+          <MapContainer
+            center={position}
+            zoom={13}
+            style={{
+              height: "300px",
+              marginTop: "20px",
+              borderRadius: "12px"
+            }}
+          >
+            <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+            <Marker position={position}>
+              <Popup>{place.name}</Popup>
+            </Marker>
+          </MapContainer>
+        </motion.div>
+
+        {/* BUTTONS */}
+        <Stack direction="row" spacing={2} sx={{ mt: 3 }}>
+          <motion.div whileTap={{ scale: 0.9 }}>
+            <Button variant="contained" onClick={handlePayment}>
+              Buy Ticket
+            </Button>
+          </motion.div>
+
+          <motion.div whileTap={{ scale: 0.9 }}>
+            <Button variant="outlined" onClick={getAITips}>
+              AI Travel Tips
+            </Button>
+          </motion.div>
+
+          <motion.div whileTap={{ scale: 0.9 }}>
+            <Button variant="contained" onClick={getAIRecommendation}>
+              AI Recommendation
+            </Button>
+          </motion.div>
+        </Stack>
+
+        {/* LOADING */}
+        {loadingAI && (
+          <Typography sx={{ mt: 2 }}>
+            Generating AI insights...
           </Typography>
+        )}
 
-          <Typography sx={{ mt: 1, whiteSpace: "pre-line" }}>
-            {aiTips}
-          </Typography>
-        </Paper>
-      )}
+        {/* AI TIPS */}
+        {aiTips && (
+          <Paper
+            sx={{
+              mt: 3,
+              p: 2,
+              background: "rgba(255,255,255,0.1)",
+              borderRadius: 3
+            }}
+          >
+            <Typography variant="h6">AI Travel Guide</Typography>
 
-      {recommendation && (
-        <Paper sx={{ mt: 3, p: 2 }}>
-          <Typography variant="h6">
-            AI Travel Recommendation
-          </Typography>
+            <Typography sx={{ mt: 1, whiteSpace: "pre-line" }}>
+              {aiTips}
+            </Typography>
+          </Paper>
+        )}
 
-          <Typography sx={{ mt: 1, whiteSpace: "pre-line" }}>
-            {recommendation}
-          </Typography>
-        </Paper>
-      )}
+        {/* AI RECOMMENDATION */}
+        {recommendation && (
+          <Paper
+            sx={{
+              mt: 3,
+              p: 2,
+              background: "rgba(255,255,255,0.1)",
+              borderRadius: 3
+            }}
+          >
+            <Typography variant="h6">
+              AI Travel Recommendation
+            </Typography>
 
-    </Paper>
+            <Typography sx={{ mt: 1, whiteSpace: "pre-line" }}>
+              {recommendation}
+            </Typography>
+          </Paper>
+        )}
+
+      </Paper>
+    </motion.div>
   );
 };
 

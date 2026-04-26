@@ -1,3 +1,4 @@
+const { protect, adminOnly } = require("../middleware/authMiddleware");
 const router = require("express").Router();
 const path = require("path");
 const multer = require("multer");
@@ -28,10 +29,23 @@ const upload = multer({
 });
 
 // routes
-router.post("/", upload.single("image"), placeController.createPlace);
+router.post(
+  "/",
+  protect,
+  adminOnly,
+  upload.single("image"),
+  placeController.createPlace
+);
+
+router.delete(
+  "/:id",
+  protect,
+  adminOnly,
+  placeController.deletePlace
+);
 router.get("/", placeController.getPlaces);
 router.get("/:id", placeController.getSinglePlace);
-router.delete("/:id", placeController.deletePlace);
+
 
 // ✅ NEW UPDATE ROUTE
 router.put("/:id", upload.single("image"), placeController.updatePlace);

@@ -15,19 +15,34 @@ function removeFile(imgPath) {
 
 // create place
 exports.createPlace = async (req, res) => {
-  const { name, location, ticketPrice, description } = req.body;
+  try {
+    const {
+      name,
+      location,
+      ticketPrice,
+      description,
+      latitude,
+      longitude
+    } = req.body;
 
-  const image = req.file ? `/uploads/places/${req.file.filename}` : "";
+    const image = req.file ? `/uploads/places/${req.file.filename}` : "";
 
-  const place = await Place.create({
-    name,
-    location,
-    ticketPrice,
-    description,
-    image
-  });
+    const place = await Place.create({
+      name,
+      location,
+      ticketPrice,
+      description,
+      latitude,
+      longitude,
+      image
+    });
 
-  res.status(201).json({ message: "Place created", place });
+    res.status(201).json({ message: "Place created", place });
+
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Create failed" });
+  }
 };
 
 // view all places
@@ -45,8 +60,12 @@ exports.getSinglePlace = async (req, res) => {
 // delete place
 exports.deletePlace = async (req, res) => {
   const place = await Place.findById(req.params.id);
-  removeFile(place.image);
 
+  if (!place) {
+    return res.status(404).json({ message: "Place not found" });
+  }
+
+  removeFile(place.image);
   await Place.findByIdAndDelete(req.params.id);
 
   res.json({ message: "Place deleted" });
@@ -55,7 +74,14 @@ exports.deletePlace = async (req, res) => {
 // update place
 exports.updatePlace = async (req, res) => {
   try {
-    const { name, location, ticketPrice, description } = req.body;
+    const {
+      name,
+      location,
+      ticketPrice,
+      description,
+      latitude,
+      longitude
+    } = req.body;
 
     const place = await Place.findById(req.params.id);
 
@@ -63,16 +89,21 @@ exports.updatePlace = async (req, res) => {
       return res.status(404).json({ message: "Place not found" });
     }
 
-    // if new image uploaded → delete old one
+    // image update
     if (req.file) {
       removeFile(place.image);
       place.image = `/uploads/places/${req.file.filename}`;
     }
 
+    // update fields
     place.name = name || place.name;
     place.location = location || place.location;
     place.ticketPrice = ticketPrice || place.ticketPrice;
     place.description = description || place.description;
+
+    // ✅ IMPORTANT FIX
+    place.latitude = latitude || place.latitude;
+    place.longitude = longitude || place.longitude;
 
     await place.save();
 

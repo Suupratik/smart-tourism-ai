@@ -6,13 +6,15 @@ import { useNavigate, useParams } from "react-router-dom";
 
 const AddPlace = () => {
   const nav = useNavigate();
-  const { id } = useParams(); // ✅ detect edit mode
+  const { id } = useParams();
 
   const [form, setForm] = useState({
     name: "",
     location: "",
     ticketPrice: "",
-    description: ""
+    description: "",
+    latitude: "",
+    longitude: ""
   });
 
   const [image, setImage] = useState(null);
@@ -28,7 +30,9 @@ const AddPlace = () => {
           name: res.data.name || "",
           location: res.data.location || "",
           ticketPrice: res.data.ticketPrice || "",
-          description: res.data.description || ""
+          description: res.data.description || "",
+          latitude: res.data.latitude || "",
+          longitude: res.data.longitude || ""
         });
       });
     }
@@ -45,21 +49,23 @@ const AddPlace = () => {
       fd.append("ticketPrice", form.ticketPrice);
       fd.append("description", form.description);
 
+      // ✅ IMPORTANT FIX
+      fd.append("latitude", form.latitude);
+      fd.append("longitude", form.longitude);
+
       if (image) fd.append("image", image);
 
       if (id) {
-        // ✅ UPDATE
         await api.put(`/places/${id}`, fd);
         alert("Place updated successfully");
       } else {
-        // ✅ CREATE
         await createPlace(fd);
         alert("Place added successfully");
       }
 
       nav("/home");
-
     } catch (err) {
+      console.error(err);
       alert("Error saving place");
     }
   };
@@ -102,6 +108,25 @@ const AddPlace = () => {
             multiline
             rows={4}
             value={form.description}
+            onChange={onChange}
+            required
+          />
+
+          {/* ✅ NEW FIELDS */}
+          <TextField
+            label="Latitude"
+            name="latitude"
+            type="number"
+            value={form.latitude}
+            onChange={onChange}
+            required
+          />
+
+          <TextField
+            label="Longitude"
+            name="longitude"
+            type="number"
+            value={form.longitude}
             onChange={onChange}
             required
           />

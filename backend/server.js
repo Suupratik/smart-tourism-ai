@@ -65,3 +65,22 @@ const PORT = process.env.PORT || 5600;
 server.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
+
+// // Make admin user (run once)
+// const User = require("./models/User");
+
+// const makeAdmin = async () => {
+//   const email = "supratikmitra15@gmail.com"; // 👈 put your email
+
+//   const user = await User.findOne({ email });
+
+//   if (user) {
+//     user.isAdmin = true;
+//     await user.save();
+//     console.log("You are now admin ✅");
+//   } else {
+//     console.log("User not found ❌");
+//   }
+// };
+
+// makeAdmin();,
