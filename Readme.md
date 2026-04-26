@@ -148,6 +148,7 @@ Provides:
 
 # 📂 Project Structure
 
+```
 smart-tourism-ai
 │
 ├── backend
@@ -170,6 +171,8 @@ smart-tourism-ai
 │   └── package.json
 │
 └── README.md
+
+```
 
 ---
 
