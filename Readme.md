@@ -1,297 +1,285 @@
 # 🌍 Smart Tourism AI
 
-A **full-stack MERN web application** that helps users explore tourist destinations, view detailed information, get AI-powered travel guidance, and purchase entry tickets online.
+A **full-stack MERN web application** designed to enhance tourism experiences by combining **AI-powered recommendations, real-time communication, interactive maps, and secure online ticket booking**.
 
-The system integrates **AI travel recommendations, interactive maps, and secure online payments**, providing a modern tourism platform experience.
+This platform allows users to explore destinations, interact with AI assistants, chat in real-time, and purchase tickets seamlessly.
 
 ---
 
 # 🚀 Features
 
-## 🔐 Authentication
-- User registration and login
-- JWT based authentication
-- Protected routes
+## 🔐 Authentication System
 
-## 🏝 Tourist Place Management
-- Add tourist places
-- Upload images
-- View place details
-- Delete places
+* User registration and login
+* JWT-based authentication
+* Protected routes
+* Email OTP verification for secure signup
+
+---
+
+## 👤 Role-Based Access (Admin/User)
+
+* Admin can add, update, and delete places
+* Users can browse and book tickets
+* Conditional UI rendering based on role
+
+---
+
+## 🏝 Tourist Place Management (CRUD)
+
+* Add tourist places (Admin only)
+* Edit and update place details
+* Delete places (Admin controlled)
+* Upload images using Multer
+* Dynamic location coordinates (latitude & longitude)
+
+---
 
 ## 📍 Interactive Maps
-- Displays place location using **Leaflet + OpenStreetMap**
-- Uses **dynamic coordinates from database**
+
+* Built with **Leaflet + OpenStreetMap**
+* Click-to-select location (auto latitude/longitude)
+* Marker-based visualization
+* Real-time coordinate mapping
+
+---
 
 ## 🤖 AI Travel Assistant
-Powered by **Groq AI**
 
-Generates:
-- travel tips
-- best time to visit
-- nearby attractions
+Powered by **Groq AI API**
 
-## 💳 Online Ticket Booking
-Secure payment using **Razorpay**
+Provides:
 
-Flow:
-Create order → payment → verification → ticket saved
+* Travel tips
+* Best time to visit
+* Nearby attractions
+* Context-based recommendations
+
+---
+
+## 💬 Real-Time Chat System
+
+* Implemented using **Socket.IO**
+* User-to-user communication
+* Instant message broadcasting
+* Live connection tracking
+
+---
+
+## 🤖 AI Chatbot
+
+* Separate from live chat
+* REST API-based interaction
+* Answers tourism-related queries
+
+---
+
+## 💳 Online Ticket Booking System
+
+* Integrated with **Razorpay**
+* Secure order creation and payment verification
+* Supports real-time payment flow
+
+---
 
 ## 🎟 My Tickets Dashboard
-Users can view purchased tickets including:
-- place ID
-- amount
-- payment status
 
-## 🖼 Image Upload
-Image upload for places using **Multer**
+* View purchased tickets
+* Payment details and status tracking
+* Linked to authenticated user
+
+---
+
+## 🔔 Notification System (Basic)
+
+* Alerts for actions (login, payment, delete, etc.)
+* Extendable for real-time notifications
+
+---
+
+## 🎨 Modern UI/UX
+
+* Built with **Material UI**
+* Glassmorphism design
+* Smooth animations (Framer Motion)
+* Responsive layout
+* Background image + gradient overlay
+
+---
+
+## 🔒 Security Features
+
+* Password hashing using bcrypt
+* JWT authentication
+* OTP verification
+* Razorpay signature validation
+* Basic admin access control
 
 ---
 
 # 🏗 Tech Stack
 
 ## Frontend
-- React (Vite)
-- Material UI
-- React Router
-- Axios
-- React Leaflet
+
+* React (Vite)
+* Material UI
+* React Router
+* Axios
+* React Leaflet
+* Framer Motion
 
 ## Backend
-- Node.js
-- Express.js
-- MongoDB
-- Mongoose
+
+* Node.js
+* Express.js
+* MongoDB (Mongoose)
+
+## Real-Time
+
+* Socket.IO
 
 ## APIs & Services
-- Groq AI
-- Razorpay
-- OpenStreetMap
+
+* Groq AI API
+* Razorpay
+* OpenStreetMap
 
 ---
 
 # 📂 Project Structure
 
-
 smart-tourism-ai
 │
 ├── backend
-│ ├── controller
-│ │ ├── authController.js
-│ │ ├── placeController.js
-│ │ ├── paymentController.js
-│ │ └── chatController.js
-│ │
-│ ├── models
-│ │ ├── User.js
-│ │ ├── Place.js
-│ │ └── Payment.js
-│ │
-│ ├── routes
-│ │ ├── authRoutes.js
-│ │ ├── placeRoutes.js
-│ │ ├── paymentRoutes.js
-│ │ └── chatRoutes.js
-│ │
-│ ├── uploads
-│ │ └── places
-│ │
-│ ├── server.js
-│ └── package.json
+│   ├── controller
+│   ├── models
+│   ├── routes
+│   ├── uploads
+│   ├── server.js
+│   └── package.json
 │
 ├── frontend
-│ ├── src
-│ │ ├── api
-│ │ │ └── api.js
-│ │ │
-│ │ ├── components
-│ │ │ ├── Appnavbar.jsx
-│ │ │ └── Chatbot.jsx
-│ │ │
-│ │ ├── pages
-│ │ │ ├── Home.jsx
-│ │ │ ├── AddPlace.jsx
-│ │ │ ├── PlaceDetails.jsx
-│ │ │ ├── Login.jsx
-│ │ │ ├── Register.jsx
-│ │ │ └── MyTickets.jsx
-│ │ │
-│ │ ├── App.jsx
-│ │ ├── main.jsx
-│ │ └── index.css
-│ │
-│ └── package.json
+│   ├── src
+│   │   ├── api
+│   │   ├── components
+│   │   ├── pages
+│   │   ├── utils
+│   │   ├── App.jsx
+│   │   └── index.css
+│   │
+│   └── package.json
 │
 └── README.md
-
 
 ---
 
 # ⚙️ Installation Guide
 
-## 1️⃣ Clone the Repository
+## 1️⃣ Clone Repository
 
-
-git clone https://github.com/yourusername/smart-tourism-ai.git
-
+git clone https://github.com/Suupratik/smart-tourism-ai.git
 cd smart-tourism-ai
-
 
 ---
 
 # 🔧 Backend Setup
 
-
 cd backend
 npm install
 
-
-Create `.env` file
-
+Create `.env` file:
 
 PORT=5600
+MONGO_URI=your_mongodb_uri
+JWT_SECRET=your_secret
 
-MONGO_URI=mongodb://127.0.0.1:27017/smarttourism
+EMAIL_USER=your_email
+EMAIL_PASS=your_app_password
 
-JWT_SECRET=your_secret_key
-
-RAZORPAY_KEY_ID=your_key
-RAZORPAY_KEY_SECRET=your_secret
+RAZORPAY_KEY=your_key
+RAZORPAY_SECRET=your_secret
 
 GROQ_API_KEY=your_groq_api_key
 
-
-Start backend server
-
+Run server:
 
 npm start
-
-
-Backend runs at
-
-
-http://localhost:5600
-
 
 ---
 
 # 🎨 Frontend Setup
 
-
 cd frontend
 npm install
 npm run dev
 
-
-Frontend runs at
-
-
-http://localhost:5173
-
-
 ---
 
-# 💳 Razorpay Test Card
+# 🌐 Deployment
 
-Use this test card for payment testing
+## Backend (Render)
 
+* Hosted on Render
+* Environment variables configured
+* Public API endpoint available
 
-Card Number: 4111 1111 1111 1111
-Expiry: Any future date
-CVV: 123
-OTP: 1234
+## Frontend (Vercel)
 
-
----
-
-# 🗺 Example Place Document
-
-
-{
-"name": "Science City",
-"location": "Kolkata",
-"description": "Science museum and park",
-"ticketPrice": 60,
-"latitude": 22.5390,
-"longitude": 88.3960
-}
-
-
----
-
-# 🧠 AI Travel Recommendation Example
-
-User clicks:
-
-
-Get AI Travel Tips
-
-
-AI generates:
-
-- Best time to visit
-- Travel tips
-- Nearby attractions
+* Deployed using Vercel
+* Connected to Render backend
+* Uses environment-based API URL
 
 ---
 
 # 🧪 API Endpoints
 
-## Places
+## Authentication
 
+POST /api/auth/register
+POST /api/auth/login
+
+## OTP
+
+POST /api/otp/send
+POST /api/otp/verify
+
+## Places
 
 POST /api/places
 GET /api/places
 GET /api/places/:id
+PUT /api/places/:id
 DELETE /api/places/:id
 
-
----
-
 ## Payments
-
 
 POST /api/payments/create-order
 POST /api/payments/verify
 GET /api/payments/my-tickets
 
-
----
-
-## AI Chat
-
+## Chat
 
 POST /api/chat
-
 
 ---
 
 # 📸 Suggested Screenshots
 
-Add a folder
+Create `/screenshots` folder:
 
-
-/screenshots
-
-
-Recommended images:
-
-
-home.png
-map.png
-payment.png
-ai-guide.png
-tickets.png
-
+* home.png
+* map.png
+* payment.png
+* chat.png
+* ai-guide.png
+* tickets.png
 
 ---
 
 # 🏗 System Architecture
 
-
 React Frontend
 │
-│ REST API
 ▼
 Node.js + Express Backend
 │
@@ -300,28 +288,24 @@ MongoDB Database
 │
 ├── Groq AI
 ├── Razorpay
+├── Socket.IO
 └── OpenStreetMap
-
 
 ---
 
 # 🎯 Future Improvements
 
-Possible upgrades:
-
-- Admin dashboard
-- Hotel booking integration
-- AI itinerary generator
-- Travel recommendation system
-- QR ticket validation
+* Advanced admin dashboard
+* Hotel booking integration
+* AI itinerary planner
+* Private chat (rooms)
+* Push notifications
+* Role-based API security middleware
 
 ---
 
 # 👨‍💻 Author
 
 **Supratik Mitra**
-
-Computer Science Student  
+Computer Science Student
 Full Stack Developer
-
----
